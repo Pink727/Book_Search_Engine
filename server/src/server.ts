@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use(routes);
 
 // All other routes should serve the index.html file
-app.get('*', (req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
 
