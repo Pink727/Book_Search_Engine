@@ -18,7 +18,9 @@
     "brcypt": "^1.0.1",
     "express": "^4.19.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^8.0.0"
+    "mongoose": "^8.0.0",
+    "@apollo/server": "^4.0.0",
+    "apollo": "2.34.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
