@@ -1,11 +1,11 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
 const secret = process.env.JWT_SECRET_KEY || '';
 const expiration = '2h';
 
-export const authMiddleware = ({ req }) => {
+export const authMiddleware = ({ req }: { req: any }) => {
   let token = req.headers.authorization || '';
 
   if (req.headers.authorization) {
@@ -17,7 +17,7 @@ export const authMiddleware = ({ req }) => {
   }
 
   try {
-    const { data } = jwt.verify(token, secret, { maxAge: expiration });
+    const { data } = jwt.verify(token, secret, { maxAge: expiration }) as JwtPayload;
     req.user = data;
   } catch {
     console.log('Invalid token');
@@ -26,7 +26,7 @@ export const authMiddleware = ({ req }) => {
   return req;
 };
 
-export const signToken = ({ username, email, _id }) => {
+export const signToken = ({ username, email, _id }: { username: string, email: string, _id: string }) => {
   const payload = { username, email, _id };
   return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 };

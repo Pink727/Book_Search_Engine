@@ -20,7 +20,9 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^8.0.0",
     "@apollo/server": "^4.0.0",
-    "apollo": "2.34.0"
+    "apollo": "2.34.0",
+    "apollo-server-express": "^2.25.2",
+    "@types/apollo-server-express": "^2.25.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
