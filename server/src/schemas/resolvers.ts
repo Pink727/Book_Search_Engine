@@ -1,10 +1,20 @@
-import { AuthenticationError } from '@apollo/server/errors';
+import { AuthenticationError } from 'apollo-server-errors'; // Correct import for AuthenticationError
 import User from '../models/User.js';
 import { signToken } from '../services/auth.js';
 
+interface UserContext {
+  _id: string;
+  username: string;
+  email: string;
+}
+
+interface Context {
+  user?: UserContext;
+}
+
 const resolvers = {
   Query: {
-    me: async (_parent: any, _args: any, context: any) => {
+    me: async (_parent: any, _args: any, context: Context) => {
       if (context.user) {
         return User.findById(context.user._id);
       }
@@ -30,26 +40,6 @@ const resolvers = {
       const user = await User.create({ username, email, password });
       const token = signToken({ username: user.username, email: user.email, _id: user._id.toString() });
       return { token, user };
-    },
-    saveBook: async (_parent: any, { bookData }: { bookData: any }, context: any) => {
-      if (context.user) {
-        return User.findByIdAndUpdate(
-          context.user._id,
-          { $addToSet: { savedBooks: bookData } },
-          { new: true, runValidators: true }
-        );
-      }
-      throw new AuthenticationError('Not logged in');
-    },
-    removeBook: async (_parent: any, { bookId }: { bookId: string }, context: any) => {
-      if (context.user) {
-        return User.findByIdAndUpdate(
-          context.user._id,
-          { $pull: { savedBooks: { bookId } } },
-          { new: true }
-        );
-      }
-      throw new AuthenticationError('Not logged in');
     },
   },
 };
