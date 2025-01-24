@@ -41,6 +41,24 @@ const resolvers = {
       const token = signToken({ username: user.username, email: user.email, _id: user._id.toString() });
       return { token, user };
     },
+    saveBook: async (_: any, { bookData }: { bookData: any }, context: Context) => {
+      if (!context.user) {
+        throw new AuthenticationError('You need to be logged in!');
+      }
+
+      try {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $addToSet: { savedBooks: bookData } },
+          { new: true, runValidators: true }
+        );
+
+        return updatedUser;
+      } catch (err) {
+        console.error(err);
+        throw new Error('Failed to save book');
+      }
+    },
   },
 };
 
