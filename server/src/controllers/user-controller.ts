@@ -31,17 +31,25 @@ export const createUser = async (req: Request, res: Response) => {
 // login a user, sign a token, and send it back (to client/src/components/LoginForm.js)
 // {body} is destructured req.body
 export const login = async (req: Request, res: Response) => {
+  console.log('Login request body:', req.body);
+
   const user = await User.findOne({ $or: [{ username: req.body.username }, { email: req.body.email }] });
   if (!user) {
+    console.log("Can't find this user");
     return res.status(400).json({ message: "Can't find this user" });
   }
 
   const correctPw = await user.isCorrectPassword(req.body.password);
+  console.log('Password correct:', correctPw);
 
   if (!correctPw) {
+    console.log('Wrong password!');
     return res.status(400).json({ message: 'Wrong password!' });
   }
+
   const token = signToken({ username: user.username, email: user.email, _id: user._id.toString() });
+  console.log('Generated token:', token);
+
   return res.json({ token, user });
 };
 
